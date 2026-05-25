@@ -1,31 +1,46 @@
-export default async function CountriesPage() {
+import Link from "next/link";
 
-  const res = await fetch("https://restcountries.com/v3.1/all");
+async function getCountries() {
+  const url = "https://restcountries.com/v3.1/all?fields=cca3,name,flags,capital,region";
 
-  console.log("STATUS:", res.status);
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } });
 
-  const data = await res.json();
+    if (!res.ok) {
+      return { countries: [], error: `API error: ${res.status}` };
+    }
 
-  console.log("TYPE:", typeof data);
-  console.log("IS ARRAY:", Array.isArray(data));
-  console.log("DATA SAMPLE:", data?.slice?.(0, 1));
+    const data = await res.json();
 
-  if (!Array.isArray(data)) {
-    return <h1>API did NOT return array ❌</h1>;
+    if (!Array.isArray(data)) {
+      return { countries: [], error: "API returned an unexpected response format." };
+    }
+
+    return { countries: data, error: null };
+  } catch {
+    return { countries: [], error: "Could not connect to the countries API." };
   }
+}
 
-  const countries = data;
+export default async function CountriesPage() {
+  const { countries, error } = await getCountries();
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Countries Working ✔</h1>
+    <div>
+      <h1>Countries</h1>
+      {error ? <p>{error}</p> : null}
 
-      {countries.slice(0, 10).map((c) => (
-        <div key={c.cca3}>
-          <img src={c.flags?.png} width="80" />
-          <p>{c.name?.common}</p>
-        </div>
-      ))}
+      <div className="grid">
+        {countries.slice(0, 20).map((c) => (
+          <div key={c.cca3} className="card">
+            <img src={c.flags?.png} width="100" alt={`${c.name?.common} flag`} />
+            <h3>{c.name?.common}</h3>
+            <p>{c.capital?.[0] || "No capital data"}</p>
+            <p>{c.region || "No region data"}</p>
+            <Link href={`/countries/${c.cca3}`}>View Details</Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
