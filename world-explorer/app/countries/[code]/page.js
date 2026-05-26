@@ -1,6 +1,4 @@
 export default async function CountryDetailsPage({ params }) {
-
-  // ✅ IMPORTANT FIX (NEW NEXT.JS RULE)
   const { code } = await params;
 
   const countryCode = code?.toUpperCase();
@@ -14,7 +12,6 @@ export default async function CountryDetailsPage({ params }) {
   }
 
   try {
-
     const res = await fetch(
       `https://restcountries.com/v3.1/alpha/${countryCode}`
     );
@@ -28,14 +25,14 @@ export default async function CountryDetailsPage({ params }) {
     }
 
     const data = await res.json();
-    const country = Array.isArray(data) ? data[0] : data;
+    const country = data[0];
 
     return (
       <div style={styles.page}>
-
         <img
           src={country.flags?.png || country.flags?.svg}
           style={styles.flag}
+          alt={country.name?.common}
         />
 
         <h1>{country.name?.common}</h1>
@@ -45,10 +42,8 @@ export default async function CountryDetailsPage({ params }) {
         <p>👥 Population: {country.population?.toLocaleString()}</p>
         <p>📏 Area: {country.area?.toLocaleString()} km²</p>
         <p>🕒 Timezones: {country.timezones?.join(", ")}</p>
-
       </div>
     );
-
   } catch (err) {
     return <h1>Error loading country</h1>;
   }
@@ -57,10 +52,10 @@ export default async function CountryDetailsPage({ params }) {
 const styles = {
   page: {
     padding: "40px",
-    color: "white"
+    color: "white",
   },
   flag: {
     width: "200px",
-    borderRadius: "10px"
-  }
+    borderRadius: "10px",
+  },
 };

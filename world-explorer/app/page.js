@@ -2,82 +2,117 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main style={{ color: "white" }}>
+    <main
+      style={{
+        color: "white",
+        maxWidth: "1400px",
+        margin: "0 auto",
+      }}
+    >
 
-      {/* HERO */}
-      <section style={{
-        textAlign: "center",
-        padding: "150px 20px",
-        background: "radial-gradient(circle at top, #1e293b, #0f172a)",
-      }}>
+      {/* HERO SECTION */}
+      <section
+        style={{
+          textAlign: "center",
+          padding: "160px 20px",
+          background:
+            "radial-gradient(circle at top, #1e293b 0%, #0f172a 70%)",
+        }}
+      >
 
-        <h1 style={{
-          fontSize: "54px",
-          fontWeight: "600",
-          letterSpacing: "-1px",
-          marginBottom: "12px"
-        }}>
+        <h1
+          style={{
+            fontSize: "56px",
+            fontWeight: "700",
+            letterSpacing: "-1.5px",
+            lineHeight: "1.1",
+            marginBottom: "16px",
+          }}
+        >
           Explore the World Instantly
         </h1>
 
-        <p style={{
-          maxWidth: "600px",
-          margin: "0 auto 30px",
-          opacity: 0.6,
-          fontSize: "18px"
-        }}>
-          Countries, flags, capitals, and global data in one clean experience.
+        <p
+          style={{
+            maxWidth: "650px",
+            margin: "0 auto 35px",
+            opacity: 0.7,
+            fontSize: "18px",
+            lineHeight: "1.7",
+          }}
+        >
+          Discover countries, capitals, flags, populations, and global
+          insights in one modern experience.
         </p>
 
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "12px",
-          flexWrap: "wrap"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "14px",
+            flexWrap: "wrap",
+          }}
+        >
 
           <Link href="/countries" style={btnPrimary}>
             🌍 Open Explorer
           </Link>
 
           <Link href="/search" style={btnSecondary}>
-            🔎 Search
+            🔎 Search Countries
           </Link>
 
         </div>
 
       </section>
 
-      {/* MINIMAL FEATURE STRIP (NO REPETITION) */}
-      <section style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: "30px",
-        flexWrap: "wrap",
-        padding: "60px 20px",
-        opacity: 0.7
-      }}>
+      {/* FEATURE STRIP */}
+      <section
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "40px",
+          flexWrap: "wrap",
+          padding: "70px 20px",
+          opacity: 0.75,
+          fontSize: "15px",
+          letterSpacing: "0.3px",
+        }}
+      >
 
         <span>🌍 250+ Countries</span>
-        <span>⚡ Fast Search</span>
-        <span>📊 Live Data</span>
-        <span>📱 Responsive</span>
+        <span>⚡ Instant Search</span>
+        <span>📊 Live Country Data</span>
+        <span>📱 Fully Responsive</span>
 
       </section>
 
-      {/* FINAL CTA */}
-      <section style={{
-        textAlign: "center",
-        padding: "100px 20px",
-        borderTop: "1px solid rgba(255,255,255,0.05)"
-      }}>
+      {/* CTA SECTION */}
+      <section
+        style={{
+          textAlign: "center",
+          padding: "110px 20px",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
 
-        <h2 style={{ fontSize: "28px", marginBottom: "10px" }}>
-          Ready to explore?
+        <h2
+          style={{
+            fontSize: "32px",
+            marginBottom: "12px",
+          }}
+        >
+          Ready to start exploring?
         </h2>
 
-        <p style={{ opacity: 0.6, marginBottom: "25px" }}>
-          Start discovering countries in seconds.
+        <p
+          style={{
+            opacity: 0.65,
+            marginBottom: "30px",
+            fontSize: "17px",
+          }}
+        >
+          Browse the world with fast and real-time country information.
         </p>
 
         <Link href="/countries" style={btnPrimary}>
@@ -90,21 +125,27 @@ export default function HomePage() {
   );
 }
 
-/* 🍏 BUTTONS */
+/* PRIMARY BUTTON */
 const btnPrimary = {
-  padding: "12px 20px",
+  padding: "13px 24px",
   background: "white",
   color: "black",
   borderRadius: "999px",
   textDecoration: "none",
-  fontWeight: "500"
+  fontWeight: "600",
+  transition: "0.25s",
+  boxShadow: "0 8px 25px rgba(255,255,255,0.12)",
 };
 
+/* SECONDARY BUTTON */
 const btnSecondary = {
-  padding: "12px 20px",
-  background: "transparent",
+  padding: "13px 24px",
+  background: "rgba(255,255,255,0.03)",
   color: "white",
   borderRadius: "999px",
-  border: "1px solid rgba(255,255,255,0.2)",
-  textDecoration: "none"
+  border: "1px solid rgba(255,255,255,0.15)",
+  textDecoration: "none",
+  fontWeight: "500",
+  backdropFilter: "blur(10px)",
+  transition: "0.25s",
 };

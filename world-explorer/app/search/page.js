@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 export default function SearchPage() {
-
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
@@ -23,7 +22,6 @@ export default function SearchPage() {
 
         const data = await res.json();
         setCountries(Array.isArray(data) ? data : []);
-
       } catch {
         setCountries([]);
       } finally {
@@ -34,47 +32,44 @@ export default function SearchPage() {
     load();
   }, []);
 
-  // 🧠 AI NORMALIZER (CLEAN TEXT)
+  // 🧠 CLEAN TEXT
   const normalize = (str) =>
-    (str || "")
-      .toLowerCase()
-      .replace(/[^a-z]/g, "");
+    (str || "").toLowerCase().replace(/[^a-z]/g, "");
 
-  // 🧠 AI MATCH SCORE SYSTEM
+  // 🧠 SMART SCORE SYSTEM
   const scoreMatch = (name, query) => {
     const n = normalize(name);
     const q = normalize(query);
 
-    if (n === q) return 100;        // exact match
-    if (n.startsWith(q)) return 90; // prefix match
-    if (n.includes(q)) return 70;   // partial match
+    if (!q) return 0;
+    if (n === q) return 100;
+    if (n.startsWith(q)) return 90;
+    if (n.includes(q)) return 70;
     return 0;
   };
 
-  // 🤖 AI SORTED RESULTS
+  // 🤖 FILTERED RESULTS
   const results = useMemo(() => {
-
     if (!search.trim()) return [];
 
     return countries
       .map((c) => ({
         ...c,
-        score: scoreMatch(c?.name?.common, search)
+        score: scoreMatch(c?.name?.common, search),
       }))
       .filter((c) => c.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 8);
-
   }, [search, countries]);
 
-  // 🤖 AI SUGGESTION (TOP MATCH)
-  const suggestion = results.length > 0 ? results[0].name.common : null;
+  const suggestion = results[0]?.name?.common || null;
 
-  // CLICK OUTSIDE
+  // CLICK OUTSIDE CLOSE
   useEffect(() => {
     const handler = (e) => {
       if (boxRef.current && !boxRef.current.contains(e.target)) {
         setOpen(false);
+        setActive(-1);
       }
     };
 
@@ -84,7 +79,6 @@ export default function SearchPage() {
 
   // KEYBOARD NAV
   const handleKey = (e) => {
-
     if (!open) return;
 
     if (e.key === "ArrowDown") {
@@ -95,7 +89,7 @@ export default function SearchPage() {
       setActive((p) => (p > 0 ? p - 1 : results.length - 1));
     }
 
-    if (e.key === "Enter" && active >= 0) {
+    if (e.key === "Enter") {
       const selected = results[active];
       if (selected) {
         window.location.href = `/countries/${selected.cca3}`;
@@ -104,13 +98,32 @@ export default function SearchPage() {
   };
 
   return (
-    <div style={{ padding: "60px", textAlign: "center" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        padding: "80px 20px",
+        background: "radial-gradient(circle at top, #1e293b, #0f172a)",
+        color: "white",
+        textAlign: "center",
+      }}
+    >
+      <h1 style={{ fontSize: "32px", marginBottom: "10px" }}>
+        🌍 Explore Countries
+      </h1>
 
-      <h1>🌍 World Explorer Search</h1>
+      <p style={{ opacity: 0.6, marginBottom: "30px" }}>
+        Fast search powered by smart relevance
+      </p>
 
-      {/* INPUT */}
-      <div ref={boxRef} style={{ maxWidth: "600px", margin: "20px auto" }}>
-
+      {/* SEARCH BOX */}
+      <div
+        ref={boxRef}
+        style={{
+          maxWidth: "650px",
+          margin: "0 auto",
+          position: "relative",
+        }}
+      >
         <input
           placeholder="Search countries..."
           value={search}
@@ -123,43 +136,43 @@ export default function SearchPage() {
           onKeyDown={handleKey}
           style={{
             width: "100%",
-            padding: "14px",
-            borderRadius: "24px",
-            border: "1px solid #334155",
-            background: "#0f172a",
-            color: "white"
+            padding: "14px 18px",
+            borderRadius: "999px",
+            border: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(255,255,255,0.05)",
+            color: "white",
+            outline: "none",
+            fontSize: "16px",
           }}
         />
 
-        {/* 🤖 AI SUGGESTION */}
+        {/* SUGGESTION */}
         {search && suggestion && search !== suggestion && (
-          <div style={{
-            marginTop: "8px",
-            fontSize: "14px",
-            opacity: 0.7
-          }}>
-            🤖 Did you mean:{" "}
+          <div style={{ marginTop: "10px", fontSize: "14px", opacity: 0.7 }}>
+            🤖 Did you mean{" "}
             <span
               onClick={() => setSearch(suggestion)}
-              style={{ color: "#3b82f6", cursor: "pointer" }}
+              style={{ color: "#60a5fa", cursor: "pointer" }}
             >
               {suggestion}?
             </span>
           </div>
         )}
 
-        {/* RESULTS */}
+        {/* DROPDOWN */}
         {open && search && (
-          <div style={{
-            marginTop: "10px",
-            background: "#111827",
-            borderRadius: "14px",
-            border: "1px solid #1f2937",
-            overflow: "hidden"
-          }}>
-
+          <div
+            style={{
+              marginTop: "15px",
+              background: "rgba(17,24,39,0.95)",
+              borderRadius: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              overflow: "hidden",
+              backdropFilter: "blur(10px)",
+            }}
+          >
             {loading ? (
-              <p style={{ padding: "10px" }}>Thinking...</p>
+              <p style={{ padding: "15px" }}>Loading countries...</p>
             ) : results.length > 0 ? (
               results.map((c, i) => (
                 <Link
@@ -167,37 +180,41 @@ export default function SearchPage() {
                   href={`/countries/${c.cca3}`}
                   style={{
                     display: "flex",
-                    gap: "10px",
-                    padding: "10px",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "12px",
                     textAlign: "left",
-                    background: i === active ? "#1f2937" : "transparent",
+                    background:
+                      i === active
+                        ? "rgba(255,255,255,0.08)"
+                        : "transparent",
                     textDecoration: "none",
-                    color: "white"
+                    color: "white",
                   }}
                 >
-
-                  <img src={c.flags?.png} width="35" />
+                  <img
+                    src={c.flags?.png}
+                    width="38"
+                    style={{ borderRadius: "6px" }}
+                  />
 
                   <div>
-                    <div style={{ fontWeight: "bold" }}>
+                    <div style={{ fontWeight: "600" }}>
                       {c.name?.common}
                     </div>
                     <small style={{ opacity: 0.6 }}>
-                      AI Score: {c.score}
+                      Score: {c.score}
                     </small>
                   </div>
-
                 </Link>
               ))
             ) : (
-              <div style={{ padding: "10px" }}>
-               No results found — try another search
+              <div style={{ padding: "15px", opacity: 0.7 }}>
+                No countries found
               </div>
             )}
-
           </div>
         )}
-
       </div>
     </div>
   );
