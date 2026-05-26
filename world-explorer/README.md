@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 World Explorer
 
-## Getting Started
+A modern **Next.js web application** that allows users to explore countries, search instantly, and view detailed global information using the REST Countries API.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+- 🌍 Explore 200+ countries
+- 🔎 Smart AI-style search with ranking
+- ⚡ Fast API integration (REST Countries)
+- 📊 Country details (population, capital, region, area)
+- 📱 Fully responsive design
+- 🎨 Modern glassmorphism UI
+- 🧭 Clean navigation (Navbar + Footer)
+
+---
+
+## 🛠 Tech Stack
+
+- Next.js (App Router)
+- React
+- JavaScript (ES6+)
+- REST Countries API
+- CSS (custom styling)
+
+---
+
+## 📁 Project Structure
+
+app/
+├── page.js (Home)
+├── about/
+├── search/
+├── countries/
+│ └── [code]/
+│ └── page.js
+├── layout.js
+
+components/
+├── Navbar.js
+├── Footer.js
+├── CountryCard.js
+├── CountrySearch.js
+
+---
+
+## 🌐 API Used
+
+This project uses the free REST Countries API:
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+https://restcountries.com/v3.1/all
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+git clone https://github.com/your-username/world-explorer.git
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+cd world-explorer
 
-## Learn More
+npm install
 
-To learn more about Next.js, take a look at the following resources:
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+http://localhost:3000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+📸 Pages Overview
+🏠 Home Page
+Hero section
+Navigation buttons
+Feature highlights
+🌍 Countries Page
+Grid of all countries
+Country cards with flags & info
+🔎 Search Page
+Fast search powered by smart relevance
+Ranked results system
+Smart suggestions
+📄 Country Details Page
+Full country information
+Flag, population, region, area, timezones
+ℹ️ About Page
+Project description
+Features
+Tech stack
+💡 Key Highlights
+Smart search ranking system (prefix + match scoring)
+Clean reusable components
+Optimized API calls
+Modern UI with glassmorphism effect
+Fully responsive layout
+👨‍💻 Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+World Explorer Project
+Built using Next.js and REST API
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📌 Notes
+No database required
+Fully frontend-based project
+Uses live API data
+📜 License
+
+This project is for educational purposes.
+
