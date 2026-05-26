@@ -1,46 +1,53 @@
 import Link from "next/link";
 
-async function getCountries() {
-  const url = "https://restcountries.com/v3.1/all?fields=cca3,name,flags,capital,region";
-
-  try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
-
-    if (!res.ok) {
-      return { countries: [], error: `API error: ${res.status}` };
-    }
-
-    const data = await res.json();
-
-    if (!Array.isArray(data)) {
-      return { countries: [], error: "API returned an unexpected response format." };
-    }
-
-    return { countries: data, error: null };
-  } catch {
-    return { countries: [], error: "Could not connect to the countries API." };
-  }
-}
-
 export default async function CountriesPage() {
-  const { countries, error } = await getCountries();
+
+  const res = await fetch(
+    "https://restcountries.com/v3.1/all?fields=name,cca3,flags,capital,region,population"
+  );
+
+  const data = await res.json();
+  const countries = Array.isArray(data) ? data : [];
 
   return (
-    <div>
-      <h1>Countries</h1>
-      {error ? <p>{error}</p> : null}
+    <main className="page">
+
+      <h1 className="title">🌍 Explore Countries</h1>
 
       <div className="grid">
-        {countries.slice(0, 20).map((c) => (
-          <div key={c.cca3} className="card">
-            <img src={c.flags?.png} width="100" alt={`${c.name?.common} flag`} />
-            <h3>{c.name?.common}</h3>
-            <p>{c.capital?.[0] || "No capital data"}</p>
-            <p>{c.region || "No region data"}</p>
-            <Link href={`/countries/${c.cca3}`}>View Details</Link>
-          </div>
+
+        {countries.slice(0, 24).map((c) => (
+
+          <Link key={c.cca3} href={`/countries/${c.cca3}`} className="card">
+
+            <div className="flagWrapper">
+              <img
+                src={c.flags?.png || c.flags?.svg}
+                alt={c.name?.common}
+                className="flag"
+              />
+            </div>
+
+            <div className="content">
+
+              <h2>{c.name?.common}</h2>
+
+              <p>📍 {c.region}</p>
+
+              <p>🏙 {c.capital?.[0] || "No capital"}</p>
+
+              <p>👥 {c.population?.toLocaleString()}</p>
+
+              <span className="btn">View Details →</span>
+
+            </div>
+
+          </Link>
+
         ))}
+
       </div>
-    </div>
+
+    </main>
   );
 }

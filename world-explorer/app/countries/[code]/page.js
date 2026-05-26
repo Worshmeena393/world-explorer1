@@ -1,37 +1,66 @@
-import Link from "next/link";
+export default async function CountryDetailsPage({ params }) {
 
-export default async function CountriesPage() {
+  // ✅ IMPORTANT FIX (NEW NEXT.JS RULE)
+  const { code } = await params;
 
-  const res = await fetch("https://restcountries.com/v3.1/all");
+  const countryCode = code?.toUpperCase();
 
-  const data = await res.json();
-
-  console.log("DATA LENGTH:", data.length);
-
-  const countries = Array.isArray(data) ? data : [];
-
-  return (
-    <div>
-      <h1>Countries 🌍</h1>
-
-      <div className="grid">
-        {countries.slice(0, 20).map((c) => (
-          <div key={c.cca3} className="card">
-
-            <img src={c.flags?.png} width="100" />
-
-            <h3>{c.name?.common}</h3>
-
-            <p>{c.capital?.[0]}</p>
-            <p>{c.region}</p>
-
-            <Link href={`/countries/${c.cca3}`}>
-              View Details
-            </Link>
-
-          </div>
-        ))}
+  if (!countryCode) {
+    return (
+      <div style={{ padding: "40px" }}>
+        <h1>Invalid country code</h1>
       </div>
-    </div>
-  );
+    );
+  }
+
+  try {
+
+    const res = await fetch(
+      `https://restcountries.com/v3.1/alpha/${countryCode}`
+    );
+
+    if (!res.ok) {
+      return (
+        <div style={{ padding: "40px" }}>
+          <h1>Country not found</h1>
+        </div>
+      );
+    }
+
+    const data = await res.json();
+    const country = Array.isArray(data) ? data[0] : data;
+
+    return (
+      <div style={styles.page}>
+
+        <img
+          src={country.flags?.png || country.flags?.svg}
+          style={styles.flag}
+        />
+
+        <h1>{country.name?.common}</h1>
+
+        <p>📍 Region: {country.region}</p>
+        <p>🏙 Capital: {country.capital?.[0]}</p>
+        <p>👥 Population: {country.population?.toLocaleString()}</p>
+        <p>📏 Area: {country.area?.toLocaleString()} km²</p>
+        <p>🕒 Timezones: {country.timezones?.join(", ")}</p>
+
+      </div>
+    );
+
+  } catch (err) {
+    return <h1>Error loading country</h1>;
+  }
 }
+
+const styles = {
+  page: {
+    padding: "40px",
+    color: "white"
+  },
+  flag: {
+    width: "200px",
+    borderRadius: "10px"
+  }
+};
